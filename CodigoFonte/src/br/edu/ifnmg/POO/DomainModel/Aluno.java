@@ -25,9 +25,10 @@ public class Aluno {
         this.telefones = new ArrayList<>();
     }
 
-    public Aluno(int id, String nome) {
-        this.id = id;
+    public Aluno(String nome, String cpf) {
+        this.id = 0;
         this.nome = nome;
+        this.cpf = cpf;
         this.telefones = new ArrayList<>();
     }
 

@@ -7,7 +7,7 @@ package br.edu.ifnmg.POO.Presentation.Console;
 
 import br.edu.ifnmg.POO.DomainModel.Aluno;
 import br.edu.ifnmg.POO.Persistence.AlunoRepositorio;
-import java.io.IOException;
+import java.util.List;
 
 /**
  *
@@ -21,23 +21,15 @@ public class POO1 {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
        
         AlunoRepositorio repo = new AlunoRepositorio();
         
-        /*
-        Aluno pc = new Aluno();
-       pc.setNome("Petrônio");
-       pc.setCpf("12345678901");
+        List<Aluno> alunos = repo.Buscar(new Aluno("a","22222222222"));
+        
+        for(Aluno a : alunos)
+            System.out.println(a.getNome());
        
-        
-        
-        System.out.println(repo.Salvar(pc));
-        */
-        
-        Aluno pc = repo.Abrir(1);
-        
-        System.out.println(pc.getNome());
     }
     
 }

@@ -9,7 +9,8 @@ import br.edu.ifnmg.POO.DomainModel.Aluno;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -26,16 +27,31 @@ public class AlunoRepositorio {
     public boolean Salvar(Aluno obj){
         try {
             
-            PreparedStatement sql = bd.getConexao()
-                    .prepareStatement("insert into Alunos(nome, cpf) values(?,?)");
-            
-            sql.setString(1, obj.getNome());
-            sql.setString(2, obj.getCpf().replace(".", "").replace("-", ""));
-            
-            if(sql.executeUpdate() > 0) 
-                return true;
-            else
-                return false;
+            if(obj.getId() == 0){
+                PreparedStatement sql = bd.getConexao()
+                        .prepareStatement("insert into Alunos(nome, cpf) values(?,?)");
+
+                sql.setString(1, obj.getNome());
+                sql.setString(2, obj.getCpf().replace(".", "").replace("-", ""));
+
+                if(sql.executeUpdate() > 0){ 
+                    return true;
+                }
+                else
+                    return false;
+            } else {
+                PreparedStatement sql = bd.getConexao()
+                        .prepareStatement("update Alunos set nome = ?, cpf = ? where id = ?");
+
+                sql.setString(1, obj.getNome());
+                sql.setString(2, obj.getCpf().replace(".", "").replace("-", ""));
+                sql.setInt(3, obj.getId());
+
+                if(sql.executeUpdate() > 0) 
+                    return true;
+                else
+                    return false;
+            }
             
             
         } catch (SQLException ex) {
@@ -66,6 +82,68 @@ public class AlunoRepositorio {
              aluno.setCpf( resultado.getString("cpf"));
              
              return aluno;
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        return null;
+    }
+    
+    public boolean Apagar(Aluno obj){
+        try {
+            PreparedStatement sql = bd.getConexao()
+                    .prepareStatement("delete from Alunos where id = ?");
+            
+            sql.setInt(1, obj.getId());
+            
+            if(sql.executeUpdate() > 0)
+                return true;
+            else
+                return false;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+    
+    public List<Aluno> Buscar(Aluno filtro){
+        try {
+            
+            String where = "";
+            
+            if(filtro.getNome() != null && !filtro.getNome().isEmpty())
+                where += "nome like '%"+filtro.getNome() + "%'";
+            
+            if(filtro.getCpf() != null && !filtro.getCpf().isEmpty()){
+                if(where.length() > 0)
+                    where += " and ";
+                where += "cpf = '"+filtro.getCpf().replace(".", "").replace("-", "") + "'";
+            }
+            
+            String consulta = "select * from Alunos";
+            
+            if(where.length() >0 )
+                consulta += " where " + where;
+            
+             PreparedStatement sql = bd.getConexao()
+                     .prepareStatement(consulta);
+             
+             ResultSet resultado = sql.executeQuery();
+             
+             List<Aluno> alunos = new ArrayList<>();
+             
+             while(resultado.next()) {
+             
+                Aluno aluno = new Aluno();
+             
+                aluno.setId( resultado.getInt("id"));
+                aluno.setNome( resultado.getString("nome"));
+                aluno.setCpf( resultado.getString("cpf"));
+                
+                alunos.add(aluno);
+             }
+             return alunos;
             
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
