@@ -6,6 +6,7 @@
 package br.edu.ifnmg.POO.Presentation.Console;
 
 import br.edu.ifnmg.POO.DomainModel.Aluno;
+import br.edu.ifnmg.POO.DomainModel.Sexo;
 import br.edu.ifnmg.POO.Persistence.AlunoRepositorio;
 import java.util.List;
 
@@ -24,12 +25,22 @@ public class POO1 {
     public static void main(String[] args)  {
        
         AlunoRepositorio repo = new AlunoRepositorio();
+
+        Aluno filtro = new Aluno();
+        filtro.setSexo(Sexo.M);
         
-        List<Aluno> alunos = repo.Buscar(new Aluno("a","22222222222"));
+        List<Aluno> alunos = repo.Buscar(filtro);
         
         for(Aluno a : alunos)
             System.out.println(a.getNome());
-       
+        
+        /*
+        Aluno a = new Aluno();
+
+        a.setSexo(Sexo.F);
+        
+        repo.Salvar(a);
+        */
     }
     
 }

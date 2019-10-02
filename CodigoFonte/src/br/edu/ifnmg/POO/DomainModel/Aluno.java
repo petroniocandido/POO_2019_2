@@ -17,11 +17,13 @@ public class Aluno {
     private int id;
     private String nome;
     private String cpf;
+    private Sexo sexo;
     private List<String> telefones;
 
     public Aluno() {
         this.id = 0;
         this.nome = "";
+        this.sexo = null;
         this.telefones = new ArrayList<>();
     }
 
@@ -29,6 +31,7 @@ public class Aluno {
         this.id = 0;
         this.nome = nome;
         this.cpf = cpf;
+        this.sexo = null;
         this.telefones = new ArrayList<>();
     }
 
@@ -55,6 +58,14 @@ public class Aluno {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public Sexo getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
     }
 
     public List<String> getTelefones() {

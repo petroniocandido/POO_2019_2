@@ -6,6 +6,7 @@
 package br.edu.ifnmg.POO.Persistence;
 
 import br.edu.ifnmg.POO.DomainModel.Aluno;
+import br.edu.ifnmg.POO.DomainModel.Sexo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,10 +30,11 @@ public class AlunoRepositorio {
             
             if(obj.getId() == 0){
                 PreparedStatement sql = bd.getConexao()
-                        .prepareStatement("insert into Alunos(nome, cpf) values(?,?)");
+                        .prepareStatement("insert into Alunos(nome, cpf,sexo) values(?,?,?)");
 
                 sql.setString(1, obj.getNome());
                 sql.setString(2, obj.getCpf().replace(".", "").replace("-", ""));
+                sql.setString(3, obj.getSexo().name());
 
                 if(sql.executeUpdate() > 0){ 
                     return true;
@@ -41,11 +43,12 @@ public class AlunoRepositorio {
                     return false;
             } else {
                 PreparedStatement sql = bd.getConexao()
-                        .prepareStatement("update Alunos set nome = ?, cpf = ? where id = ?");
+                        .prepareStatement("update Alunos set nome = ?, cpf = ?, sexo = ? where id = ?");
 
                 sql.setString(1, obj.getNome());
                 sql.setString(2, obj.getCpf().replace(".", "").replace("-", ""));
-                sql.setInt(3, obj.getId());
+                sql.setString(3, obj.getSexo().name());
+                sql.setInt(4, obj.getId());
 
                 if(sql.executeUpdate() > 0) 
                     return true;
@@ -80,6 +83,7 @@ public class AlunoRepositorio {
              aluno.setId( resultado.getInt("id"));
              aluno.setNome( resultado.getString("nome"));
              aluno.setCpf( resultado.getString("cpf"));
+             aluno.setSexo( Sexo.valueOf(resultado.getString("sexo")));
              
              return aluno;
             
@@ -121,6 +125,12 @@ public class AlunoRepositorio {
                 where += "cpf = '"+filtro.getCpf().replace(".", "").replace("-", "") + "'";
             }
             
+            if(filtro.getSexo() != null ){
+                if(where.length() > 0)
+                    where += " and ";
+                where += "sexo = '"+filtro.getSexo().name() +"'";
+            }
+            
             String consulta = "select * from Alunos";
             
             if(where.length() >0 )
@@ -140,6 +150,7 @@ public class AlunoRepositorio {
                 aluno.setId( resultado.getInt("id"));
                 aluno.setNome( resultado.getString("nome"));
                 aluno.setCpf( resultado.getString("cpf"));
+                aluno.setSexo( Sexo.valueOf(resultado.getString("sexo")));
                 
                 alunos.add(aluno);
              }

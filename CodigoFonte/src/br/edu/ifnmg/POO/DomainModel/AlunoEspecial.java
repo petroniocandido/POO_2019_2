@@ -23,7 +23,7 @@ public class AlunoEspecial extends Aluno {
     }
 
     public AlunoEspecial(int id, String nome) {
-        super(id, nome);
+        super();
         this.necessidadesEspeciais = new ArrayList<>();
     }
     
