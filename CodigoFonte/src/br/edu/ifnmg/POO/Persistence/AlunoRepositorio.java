@@ -10,6 +10,7 @@ import br.edu.ifnmg.POO.DomainModel.Sexo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,32 +18,34 @@ import java.util.List;
  *
  * @author petronio
  */
-public class AlunoRepositorio {
-    
-    public BancoDados bd;
+public class AlunoRepositorio extends BancoDados {
     
     public AlunoRepositorio(){
-        bd = new BancoDados();
+        super();
     }
     
     public boolean Salvar(Aluno obj){
         try {
             
             if(obj.getId() == 0){
-                PreparedStatement sql = bd.getConexao()
-                        .prepareStatement("insert into Alunos(nome, cpf,sexo) values(?,?,?)");
+                PreparedStatement sql = this.getConexao()
+                        .prepareStatement("insert into Alunos(nome, cpf,sexo) values(?,?,?)",
+                                Statement.RETURN_GENERATED_KEYS);
 
                 sql.setString(1, obj.getNome());
                 sql.setString(2, obj.getCpf().replace(".", "").replace("-", ""));
                 sql.setString(3, obj.getSexo().name());
 
                 if(sql.executeUpdate() > 0){ 
+                    ResultSet chave = sql.getGeneratedKeys();
+                    chave.next();
+                    obj.setId(chave.getInt(1));
                     return true;
                 }
                 else
                     return false;
             } else {
-                PreparedStatement sql = bd.getConexao()
+                PreparedStatement sql = this.getConexao()
                         .prepareStatement("update Alunos set nome = ?, cpf = ?, sexo = ? where id = ?");
 
                 sql.setString(1, obj.getNome());
@@ -68,7 +71,7 @@ public class AlunoRepositorio {
     public Aluno Abrir(int id){
         try {
             
-             PreparedStatement sql = bd.getConexao()
+             PreparedStatement sql = this.getConexao()
                      .prepareStatement("select * from Alunos where id = ?");
              
              sql.setInt(1, id);
@@ -96,7 +99,7 @@ public class AlunoRepositorio {
     
     public boolean Apagar(Aluno obj){
         try {
-            PreparedStatement sql = bd.getConexao()
+            PreparedStatement sql = this.getConexao()
                     .prepareStatement("delete from Alunos where id = ?");
             
             sql.setInt(1, obj.getId());
@@ -136,7 +139,7 @@ public class AlunoRepositorio {
             if(where.length() >0 )
                 consulta += " where " + where;
             
-             PreparedStatement sql = bd.getConexao()
+             PreparedStatement sql = this.getConexao()
                      .prepareStatement(consulta);
              
              ResultSet resultado = sql.executeQuery();

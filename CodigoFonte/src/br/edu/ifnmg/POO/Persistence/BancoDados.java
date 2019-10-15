@@ -16,6 +16,7 @@ import java.util.logging.Logger;
  * @author petronio
  */
 public class BancoDados {
+    
     private Connection conexao;
     
     public BancoDados(){

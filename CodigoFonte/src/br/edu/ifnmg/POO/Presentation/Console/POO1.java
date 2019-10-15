@@ -26,15 +26,23 @@ public class POO1 {
        
         AlunoRepositorio repo = new AlunoRepositorio();
 
-        Aluno filtro = new Aluno();
+        Aluno filtro = new Aluno("José", "12345678912");
+        
         filtro.setSexo(Sexo.M);
         
+        repo.Salvar(filtro);
+        
+        System.out.println(filtro.getId());
+        
+        repo.Apagar(filtro);
+        
+        /*
         List<Aluno> alunos = repo.Buscar(filtro);
         
         for(Aluno a : alunos)
             System.out.println(a.getNome());
         
-        /*
+        
         Aluno a = new Aluno();
 
         a.setSexo(Sexo.F);
