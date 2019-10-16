@@ -6,8 +6,13 @@
 package br.edu.ifnmg.POO.Presentation.Console;
 
 import br.edu.ifnmg.POO.DomainModel.Aluno;
+import br.edu.ifnmg.POO.DomainModel.Professor;
 import br.edu.ifnmg.POO.DomainModel.Sexo;
+import br.edu.ifnmg.POO.DomainModel.Turma;
 import br.edu.ifnmg.POO.Persistence.AlunoRepositorio;
+import br.edu.ifnmg.POO.Persistence.ProfessorRepositorio;
+import br.edu.ifnmg.POO.Persistence.TurmaRepositorio;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,31 +29,42 @@ public class POO1 {
      */
     public static void main(String[] args)  {
        
-        AlunoRepositorio repo = new AlunoRepositorio();
-
-        Aluno filtro = new Aluno("José", "12345678912");
-        
-        filtro.setSexo(Sexo.M);
-        
-        repo.Salvar(filtro);
-        
-        System.out.println(filtro.getId());
-        
-        repo.Apagar(filtro);
+        AlunoRepositorio aluno_repo = new AlunoRepositorio();
+        ProfessorRepositorio prof_repo = new ProfessorRepositorio();
+        TurmaRepositorio turma_repo = new TurmaRepositorio();
         
         /*
-        List<Aluno> alunos = repo.Buscar(filtro);
+        List<Aluno> alunos = new ArrayList<>();
         
-        for(Aluno a : alunos)
-            System.out.println(a.getNome());
+        for(int a = 0; a < 10; a++){
+            Aluno aluno = new Aluno(Integer.toString(a), Integer.toString(a));
+            aluno.setSexo(Sexo.F);
+            aluno_repo.Salvar(aluno);
+            alunos.add(aluno);
+        }
         
+        Professor prof = new Professor();
+        prof.setNome("Petrônio");
+        prof.setCpf("33");
+        prof_repo.Salvar(prof);
         
-        Aluno a = new Aluno();
+        Turma turma = new Turma();
+        
+        turma.setSemestre("20192");
+        turma.setProfessor(prof);
+        turma.setAlunos(alunos);
+        
+        turma_repo.Salvar(turma);
 
-        a.setSexo(Sexo.F);
+*/
         
-        repo.Salvar(a);
-        */
+        Turma t = turma_repo.Abrir(1);
+        
+        System.out.println(t.getProfessor().getNome());
+        
+        for(Aluno a : t.getAlunos())
+            System.out.println(a.getNome());
+
     }
     
 }
