@@ -79,6 +79,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    
     private void mnuAlunosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAlunosActionPerformed
         
         // Criar o objeto da classe AlunoBuscar (JInternalFrame)

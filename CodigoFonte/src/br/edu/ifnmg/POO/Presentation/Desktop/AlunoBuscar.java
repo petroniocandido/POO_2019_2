@@ -5,17 +5,31 @@
  */
 package br.edu.ifnmg.POO.Presentation.Desktop;
 
+import br.edu.ifnmg.POO.DomainModel.Aluno;
+import br.edu.ifnmg.POO.DomainModel.Sexo;
+import br.edu.ifnmg.POO.Persistence.AlunoRepositorio;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 /**
  *
  * @author petronio
  */
 public class AlunoBuscar extends javax.swing.JInternalFrame {
+    
+    AlunoRepositorio repositorio;
+    Aluno filtro;
 
     /**
      * Creates new form AlunoBuscar
      */
     public AlunoBuscar() {
         initComponents();
+        repositorio = new AlunoRepositorio();
+        filtro = new Aluno();
     }
 
     /**
@@ -27,24 +41,164 @@ public class AlunoBuscar extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        txtNome = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        cbxSexo = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        txtCPF = new javax.swing.JTextField();
+        btnBuscar = new javax.swing.JButton();
+        btnNovo = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabResultado = new javax.swing.JTable();
+
         setClosable(true);
         setTitle("Buscar Alunos");
+
+        jLabel1.setText("Nome:");
+
+        jLabel2.setText("Sexo:");
+
+        cbxSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "F", "M" }));
+
+        jLabel3.setText("CPF:");
+
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
+        btnNovo.setText("Novo");
+
+        tabResultado.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nome", "CPF", "Sexo"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tabResultado.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tabResultado);
+        if (tabResultado.getColumnModel().getColumnCount() > 0) {
+            tabResultado.getColumnModel().getColumn(1).setPreferredWidth(60);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 494, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnBuscar))
+                            .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnNovo))))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 274, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(cbxSexo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar)
+                    .addComponent(btnNovo))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        filtro = new Aluno();
+        filtro.setNome( txtNome.getText() );
+        filtro.setSexo(Sexo.valueOf(cbxSexo.getSelectedItem().toString()));
+        
+        if(!txtCPF.getText().isEmpty() && txtCPF.getText().length() >= 11)
+            filtro.setCpf(txtCPF.getText());
+        
+        List<Aluno> alunos = repositorio.Buscar(filtro);
+        
+        preencherTabela(alunos);
+        
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    
+    public void preencherTabela(List<Aluno> lista){
+       
+        DefaultTableModel modelo = new DefaultTableModel();
+        
+        modelo.addColumn("ID");
+        modelo.addColumn("Nome");
+        modelo.addColumn("CPF");
+        modelo.addColumn("Sexo");
+        
+        for(Aluno a : lista){
+            Vector linha = new Vector();
+            linha.add(a.getId());
+            linha.add(a.getNome());
+            linha.add(a.getCpf());
+            linha.add(a.getSexo());
+            
+            modelo.addRow(linha);
+        }
+       
+        tabResultado.setModel(modelo);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnNovo;
+    private javax.swing.JComboBox<String> cbxSexo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tabResultado;
+    private javax.swing.JTextField txtCPF;
+    private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
 }
