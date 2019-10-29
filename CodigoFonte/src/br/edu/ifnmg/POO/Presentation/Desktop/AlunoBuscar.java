@@ -71,6 +71,11 @@ public class AlunoBuscar extends javax.swing.JInternalFrame {
         });
 
         btnNovo.setText("Novo");
+        btnNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNovoActionPerformed(evt);
+            }
+        });
 
         tabResultado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -96,6 +101,14 @@ public class AlunoBuscar extends javax.swing.JInternalFrame {
             }
         });
         tabResultado.getTableHeader().setReorderingAllowed(false);
+        tabResultado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tabResultadoMousePressed(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabResultadoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabResultado);
         if (tabResultado.getColumnModel().getColumnCount() > 0) {
             tabResultado.getColumnModel().getColumn(1).setPreferredWidth(60);
@@ -165,6 +178,39 @@ public class AlunoBuscar extends javax.swing.JInternalFrame {
         preencherTabela(alunos);
         
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
+        
+        AlunoEditar tela = new AlunoEditar(
+                new Aluno("", ""), 
+                this.repositorio
+        );
+        
+        this.getParent().add(tela);
+        
+        tela.show();
+        
+    }//GEN-LAST:event_btnNovoActionPerformed
+
+    private void tabResultadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabResultadoMouseClicked
+        
+        int linha = this.tabResultado.getSelectedRow();
+        
+        int id = Integer.parseInt( this.tabResultado.getValueAt(linha, 0).toString() );
+        
+        Aluno aluno = repositorio.Abrir(id);
+        
+        AlunoEditar tela = new AlunoEditar(aluno, repositorio);
+        
+        this.getParent().add(tela);
+        
+        tela.show();
+        
+    }//GEN-LAST:event_tabResultadoMouseClicked
+
+    private void tabResultadoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabResultadoMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tabResultadoMousePressed
 
     
     public void preencherTabela(List<Aluno> lista){
