@@ -6,11 +6,13 @@
 package br.edu.ifnmg.POO.Presentation.Desktop;
 
 import br.edu.ifnmg.POO.DomainModel.Aluno;
+import br.edu.ifnmg.POO.DomainModel.ErroValidacaoException;
 import br.edu.ifnmg.POO.DomainModel.Sexo;
 import br.edu.ifnmg.POO.Persistence.AlunoRepositorio;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -167,11 +169,17 @@ public class AlunoBuscar extends javax.swing.JInternalFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         filtro = new Aluno();
-        filtro.setNome( txtNome.getText() );
-        filtro.setSexo(Sexo.valueOf(cbxSexo.getSelectedItem().toString()));
-        
-        if(!txtCPF.getText().isEmpty() && txtCPF.getText().length() >= 11)
-            filtro.setCpf(txtCPF.getText());
+        try {
+            if(txtNome.getText().length() > 0)
+                filtro.setNome( txtNome.getText() );
+            
+            filtro.setSexo(Sexo.valueOf(cbxSexo.getSelectedItem().toString()));
+
+            if(!txtCPF.getText().isEmpty() && txtCPF.getText().length() >= 11)
+                filtro.setCpf(txtCPF.getText());
+        } catch(ErroValidacaoException ex){
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
         
         List<Aluno> alunos = repositorio.Buscar(filtro);
         
@@ -182,7 +190,7 @@ public class AlunoBuscar extends javax.swing.JInternalFrame {
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         
         AlunoEditar tela = new AlunoEditar(
-                new Aluno("", ""), 
+                new Aluno(), 
                 this.repositorio
         );
         

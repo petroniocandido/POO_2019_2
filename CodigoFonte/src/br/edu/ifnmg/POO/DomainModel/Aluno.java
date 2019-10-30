@@ -8,6 +8,8 @@ package br.edu.ifnmg.POO.DomainModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -19,11 +21,16 @@ public class Aluno {
     private String cpf;
     private Sexo sexo;
     private List<String> telefones;
+    
+    private Pattern regex_cpf = 
+            Pattern.compile("\\d{3}\\.?\\d{3}\\.?\\d{3}\\-?\\d{2}");
+
 
     public Aluno() {
         this.id = 0;
         this.nome = "";
-        this.sexo = null;
+        this.cpf = "00000000000";
+        this.sexo = Sexo.F;
         this.telefones = new ArrayList<>();
     }
 
@@ -31,7 +38,7 @@ public class Aluno {
         this.id = 0;
         this.nome = nome;
         this.cpf = cpf;
-        this.sexo = null;
+        this.sexo = Sexo.F;
         this.telefones = new ArrayList<>();
     }
 
@@ -48,16 +55,25 @@ public class Aluno {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(String nome) throws ErroValidacaoException {
+        if(nome.length() < 3)
+            throw new ErroValidacaoException("O atributo nome deve ter no mínimo 3 caracteres!");
         this.nome = nome;
     }
 
     public String getCpf() {
-        return cpf;
+        return  cpf.substring(0, 3)+"."+
+                cpf.substring(3, 6)+"."+
+                cpf.substring(6, 9)+"-"+
+                cpf.substring(9, 11);
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setCpf(String cpf) throws ErroValidacaoException {
+        Matcher m = regex_cpf.matcher(cpf);
+        if(m.matches())
+            this.cpf = cpf.replace(".", "").replace("-", "");
+        else
+            throw new ErroValidacaoException("CPF Inválido!");
     }
 
     public Sexo getSexo() {

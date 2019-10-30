@@ -83,10 +83,14 @@ public class AlunoRepositorio extends BancoDados {
              
              Aluno aluno = new Aluno();
              
-             aluno.setId( resultado.getInt("id"));
-             aluno.setNome( resultado.getString("nome"));
-             aluno.setCpf( resultado.getString("cpf"));
-             aluno.setSexo( Sexo.valueOf(resultado.getString("sexo")));
+             try {
+                aluno.setId( resultado.getInt("id"));
+                aluno.setNome( resultado.getString("nome"));
+                aluno.setCpf( resultado.getString("cpf"));
+                aluno.setSexo( Sexo.valueOf(resultado.getString("sexo")));
+             } catch(Exception ex){
+                 aluno = null;
+             }
              
              return aluno;
             
@@ -149,11 +153,15 @@ public class AlunoRepositorio extends BancoDados {
              while(resultado.next()) {
              
                 Aluno aluno = new Aluno();
-             
-                aluno.setId( resultado.getInt("id"));
-                aluno.setNome( resultado.getString("nome"));
-                aluno.setCpf( resultado.getString("cpf"));
-                aluno.setSexo( Sexo.valueOf(resultado.getString("sexo")));
+                
+                try {
+                    aluno.setId( resultado.getInt("id"));
+                    aluno.setNome( resultado.getString("nome"));
+                    aluno.setCpf( resultado.getString("cpf"));
+                    aluno.setSexo( Sexo.valueOf(resultado.getString("sexo")));
+                } catch(Exception ex){
+                    aluno = null;
+                }
                 
                 alunos.add(aluno);
              }
