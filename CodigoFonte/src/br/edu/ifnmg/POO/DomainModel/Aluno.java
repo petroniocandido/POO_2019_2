@@ -91,6 +91,16 @@ public class Aluno {
     public void setTelefones(List<String> telefones) {
         this.telefones = telefones;
     }
+    
+    public void addTelefone(String telefone){
+        if(! this.telefones.contains(telefone))
+            this.telefones.add(telefone);
+    }
+    
+    public void removeTelefone(String telefone){
+        if(this.telefones.contains(telefone))
+            this.telefones.remove(telefone);
+    }
 
     @Override
     public int hashCode() {

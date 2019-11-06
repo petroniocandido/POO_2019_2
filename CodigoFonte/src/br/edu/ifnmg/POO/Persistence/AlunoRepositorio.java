@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -40,6 +42,9 @@ public class AlunoRepositorio extends BancoDados {
                     ResultSet chave = sql.getGeneratedKeys();
                     chave.next();
                     obj.setId(chave.getInt(1));
+                    
+                    atualizarTelefones(obj);
+                    
                     return true;
                 }
                 else
@@ -53,8 +58,10 @@ public class AlunoRepositorio extends BancoDados {
                 sql.setString(3, obj.getSexo().name());
                 sql.setInt(4, obj.getId());
 
-                if(sql.executeUpdate() > 0) 
+                if(sql.executeUpdate() > 0) {
+                    atualizarTelefones(obj);
                     return true;
+                }
                 else
                     return false;
             }
@@ -66,6 +73,30 @@ public class AlunoRepositorio extends BancoDados {
         
         return false;
         
+    }
+    
+    public void atualizarTelefones(Aluno aluno){
+        try {
+            PreparedStatement sql = this.getConexao()
+                    .prepareStatement("delete from AlunosTelefones where aluno_id = ?");
+            
+            sql.setInt(1, aluno.getId());
+            
+            String values = "";
+            for(String telefone : aluno.getTelefones()){
+                if(values.length() > 0) 
+                    values += ", ";
+                
+                values += "("+aluno.getId()+",'"+telefone+"')";
+            }
+            
+            Statement sql2 = this.getConexao().createStatement();
+            
+            sql2.executeUpdate("insert into AlunosTelefones(aluno_id, telefone) VALUES " + values);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AlunoRepositorio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public Aluno Abrir(int id){
@@ -88,6 +119,7 @@ public class AlunoRepositorio extends BancoDados {
                 aluno.setNome( resultado.getString("nome"));
                 aluno.setCpf( resultado.getString("cpf"));
                 aluno.setSexo( Sexo.valueOf(resultado.getString("sexo")));
+                abrirTelefones(aluno);
              } catch(Exception ex){
                  aluno = null;
              }
@@ -99,6 +131,24 @@ public class AlunoRepositorio extends BancoDados {
         }
         
         return null;
+    }
+    
+    public void abrirTelefones(Aluno aluno){
+        try {
+            PreparedStatement sql = this.getConexao()
+                    .prepareStatement("select telefone from AlunosTelefones where aluno_id = ?");
+            
+            sql.setInt(1, aluno.getId());
+            
+            ResultSet resultado = sql.executeQuery();
+            
+            while(resultado.next()){
+                aluno.addTelefone(resultado.getString("telefone"));
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AlunoRepositorio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public boolean Apagar(Aluno obj){
@@ -126,7 +176,8 @@ public class AlunoRepositorio extends BancoDados {
             if(filtro.getNome() != null && !filtro.getNome().isEmpty())
                 where += "nome like '%"+filtro.getNome() + "%'";
             
-            if(filtro.getCpf() != null && !filtro.getCpf().isEmpty()){
+            if(filtro.getCpf() != null && !filtro.getCpf().isEmpty() && 
+                    !"000.000.000-00".equals(filtro.getCpf())){
                 if(where.length() > 0)
                     where += " and ";
                 where += "cpf = '"+filtro.getCpf().replace(".", "").replace("-", "") + "'";
@@ -159,6 +210,7 @@ public class AlunoRepositorio extends BancoDados {
                     aluno.setNome( resultado.getString("nome"));
                     aluno.setCpf( resultado.getString("cpf"));
                     aluno.setSexo( Sexo.valueOf(resultado.getString("sexo")));
+                    abrirTelefones(aluno);
                 } catch(Exception ex){
                     aluno = null;
                 }
