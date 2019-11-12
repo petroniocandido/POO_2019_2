@@ -78,6 +78,8 @@ public class Professor {
         return true;
     }
     
-    
+    public String toString(){
+        return this.nome;
+    }
     
 }

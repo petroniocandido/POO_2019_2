@@ -59,6 +59,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         mnuCadastros.add(mnuProfessores);
 
         mnuTurmas.setText("Turmas");
+        mnuTurmas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuTurmasActionPerformed(evt);
+            }
+        });
         mnuCadastros.add(mnuTurmas);
 
         jMenuBar1.add(mnuCadastros);
@@ -93,6 +98,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
         tela.show();
         
     }//GEN-LAST:event_mnuAlunosActionPerformed
+
+    private void mnuTurmasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuTurmasActionPerformed
+        TurmaBuscar tela = new TurmaBuscar();
+        
+        this.add(tela);
+        
+        tela.show();
+    }//GEN-LAST:event_mnuTurmasActionPerformed
 
     /**
      * @param args the command line arguments

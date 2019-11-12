@@ -117,13 +117,16 @@ public class ProfessorRepositorio extends BancoDados {
             
             String where = "";
             
-            if(filtro.getNome() != null && !filtro.getNome().isEmpty())
-                where += "nome like '%"+filtro.getNome() + "%'";
+            if(filtro != null){
             
-            if(filtro.getCpf() != null && !filtro.getCpf().isEmpty()){
-                if(where.length() > 0)
-                    where += " and ";
-                where += "cpf = '"+filtro.getCpf().replace(".", "").replace("-", "") + "'";
+                if(filtro.getNome() != null && !filtro.getNome().isEmpty())
+                    where += "nome like '%"+filtro.getNome() + "%'";
+
+                if(filtro.getCpf() != null && !filtro.getCpf().isEmpty()){
+                    if(where.length() > 0)
+                        where += " and ";
+                    where += "cpf = '"+filtro.getCpf().replace(".", "").replace("-", "") + "'";
+                }
             }
             
             
@@ -131,6 +134,8 @@ public class ProfessorRepositorio extends BancoDados {
             
             if(where.length() >0 )
                 consulta += " where " + where;
+            
+            consulta += " order by nome";
             
              PreparedStatement sql = this.getConexao()
                      .prepareStatement(consulta);

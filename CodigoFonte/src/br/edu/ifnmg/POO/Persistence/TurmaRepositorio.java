@@ -12,6 +12,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,6 +25,26 @@ public class TurmaRepositorio extends BancoDados {
 
     public TurmaRepositorio() {
         super();
+    }
+    
+    public List<String> listartSemestres() {
+        List<String> semestres = new ArrayList<>();
+        
+        try {
+            Statement sql = this.getConexao().createStatement();
+            
+            ResultSet resultado = sql.executeQuery("select distinct semestre from Turmas order by semestre");
+            
+            while(resultado.next()){
+                semestres.add(resultado.getString("semestre"));
+            }
+ 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(TurmaRepositorio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return semestres;
     }
     
     public boolean Salvar(Turma turma){
@@ -130,6 +154,56 @@ public class TurmaRepositorio extends BancoDados {
              }
              
              return turma;
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        return null;
+    }
+    
+    
+    
+    public List<Turma> Buscar(Turma filtro){
+        try {
+            
+            String where = "";
+            
+            if(filtro.getSemestre() != null && !filtro.getSemestre().isEmpty())
+                where += "semestre = '"+filtro.getSemestre() + "'";
+            
+            if(filtro.getProfessor() != null){
+                if(where.length() > 0)
+                    where += " and ";
+                where += "professor_id = " + filtro.getProfessor().getId();
+            }
+            
+            
+            String consulta = "select * from Turmas";
+            
+            if(where.length() >0 )
+                consulta += " where " + where;
+            
+             PreparedStatement sql = this.getConexao()
+                     .prepareStatement(consulta);
+             
+             ResultSet resultado = sql.executeQuery();
+             
+             List<Turma> turmas = new ArrayList<>();
+             
+             ProfessorRepositorio repo_prof = new ProfessorRepositorio();
+             
+             while(resultado.next()) {
+             
+                Turma p = new Turma();
+             
+                p.setId( resultado.getInt("id"));
+                p.setSemestre( resultado.getString("semestre"));
+                p.setProfessor(repo_prof.Abrir( resultado.getInt("professor_id") ));
+                
+                turmas.add(p);
+             }
+             return turmas;
             
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
