@@ -173,20 +173,22 @@ public class AlunoRepositorio extends BancoDados {
             
             String where = "";
             
-            if(filtro.getNome() != null && !filtro.getNome().isEmpty())
-                where += "nome like '%"+filtro.getNome() + "%'";
+            if(filtro != null){
+                if(filtro.getNome() != null && !filtro.getNome().isEmpty())
+                    where += "nome like '%"+filtro.getNome() + "%'";
+
+                if(filtro.getCpf() != null && !filtro.getCpf().isEmpty() && 
+                        !"000.000.000-00".equals(filtro.getCpf())){
+                    if(where.length() > 0)
+                        where += " and ";
+                    where += "cpf = '"+filtro.getCpf().replace(".", "").replace("-", "") + "'";
+                }
             
-            if(filtro.getCpf() != null && !filtro.getCpf().isEmpty() && 
-                    !"000.000.000-00".equals(filtro.getCpf())){
-                if(where.length() > 0)
-                    where += " and ";
-                where += "cpf = '"+filtro.getCpf().replace(".", "").replace("-", "") + "'";
-            }
-            
-            if(filtro.getSexo() != null ){
-                if(where.length() > 0)
-                    where += " and ";
-                where += "sexo = '"+filtro.getSexo().name() +"'";
+                if(filtro.getSexo() != null ){
+                    if(where.length() > 0)
+                        where += " and ";
+                    where += "sexo = '"+filtro.getSexo().name() +"'";
+                }
             }
             
             String consulta = "select * from Alunos";

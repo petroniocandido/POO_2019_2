@@ -137,7 +137,7 @@ public class Aluno {
     
     @Override
     public String toString() {
-        return "Aluno{" + "id=" + id + ", nome=" + nome + '}';
+        return this.nome;
     }
     
 }

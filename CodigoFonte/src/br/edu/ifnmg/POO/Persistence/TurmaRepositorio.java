@@ -6,6 +6,7 @@
 package br.edu.ifnmg.POO.Persistence;
 
 import br.edu.ifnmg.POO.DomainModel.Aluno;
+import br.edu.ifnmg.POO.DomainModel.ErroValidacaoException;
 import br.edu.ifnmg.POO.DomainModel.Professor;
 import br.edu.ifnmg.POO.DomainModel.Turma;
 import java.sql.PreparedStatement;
@@ -80,7 +81,7 @@ public class TurmaRepositorio extends BancoDados {
                 if(sql.executeUpdate() > 0) {
                     
                     PreparedStatement sql2 = this.getConexao()
-                        .prepareStatement("delete from TurmasAlunos where id = ?");
+                        .prepareStatement("delete from TurmasAlunos where turma_id = ?");
                     
                     sql2.setInt(1, turma.getId());
                     
@@ -128,16 +129,18 @@ public class TurmaRepositorio extends BancoDados {
              
              Turma turma = new Turma();
              
-             turma.setId( resultado.getInt("id"));
-             turma.setSemestre(resultado.getString("semestre"));
              
-             ProfessorRepositorio prof_repo = new ProfessorRepositorio();
+            try {
+                turma.setSemestre(resultado.getString("semestre"));
+                turma.setId( resultado.getInt("id"));
+                ProfessorRepositorio prof_repo = new ProfessorRepositorio();
+                Professor prof = prof_repo.Abrir(resultado.getInt("professor_id"));
              
-             Professor prof = prof_repo.Abrir(resultado.getInt("professor_id"));
-             
-             turma.setProfessor(prof);
-             
-             
+                turma.setProfessor(prof);
+            } catch (ErroValidacaoException ex) {
+                return null;
+            }
+                          
              PreparedStatement sql2 = this.getConexao()
                      .prepareStatement("select aluno_id from TurmasAlunos where turma_id = ?");
              
@@ -207,6 +210,8 @@ public class TurmaRepositorio extends BancoDados {
             
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
+        } catch (ErroValidacaoException ex) {
+            Logger.getLogger(TurmaRepositorio.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return null;

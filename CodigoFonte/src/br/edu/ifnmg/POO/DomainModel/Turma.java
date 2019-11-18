@@ -42,7 +42,9 @@ public class Turma {
         return semestre;
     }
 
-    public void setSemestre(String semestre) {
+    public void setSemestre(String semestre) throws ErroValidacaoException {
+        if(semestre.length() != 5)
+            throw new ErroValidacaoException("O semestre deve ter exatamente 5 dígitos!");
         this.semestre = semestre;
     }
     

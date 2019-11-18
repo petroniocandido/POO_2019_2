@@ -6,12 +6,15 @@
 package br.edu.ifnmg.POO.Presentation.Desktop;
 
 import br.edu.ifnmg.POO.DomainModel.Aluno;
+import br.edu.ifnmg.POO.DomainModel.ErroValidacaoException;
 import br.edu.ifnmg.POO.DomainModel.Professor;
 import br.edu.ifnmg.POO.DomainModel.Turma;
 import br.edu.ifnmg.POO.Persistence.ProfessorRepositorio;
 import br.edu.ifnmg.POO.Persistence.TurmaRepositorio;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
@@ -100,6 +103,11 @@ public class TurmaBuscar extends javax.swing.JInternalFrame {
 
             }
         ));
+        tbxResultado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbxResultadoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbxResultado);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -151,15 +159,34 @@ public class TurmaBuscar extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        filtro = new Turma();
-        
-        filtro.setSemestre( (String) cbxSemestres.getSelectedItem() );
-        filtro.setProfessor((Professor) cbxProfessores.getSelectedItem() );
-        
-        List<Turma> turmas = repositorio.Buscar(filtro);
-        
-        preencherTabela(turmas);
+        try {
+            filtro = new Turma();
+            
+            filtro.setSemestre( (String) cbxSemestres.getSelectedItem() );
+            filtro.setProfessor((Professor) cbxProfessores.getSelectedItem() );
+            
+            List<Turma> turmas = repositorio.Buscar(filtro);
+            
+            preencherTabela(turmas);
+        } catch (ErroValidacaoException ex) {
+            Logger.getLogger(TurmaBuscar.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void tbxResultadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbxResultadoMouseClicked
+        
+        int linha = this.tbxResultado.getSelectedRow();
+        
+        int id = Integer.parseInt( this.tbxResultado.getValueAt(linha, 0).toString() );
+        
+        Turma turma = repositorio.Abrir(id);
+        
+        TurmaEditar tela = new TurmaEditar(turma, repositorio);
+        
+        this.getParent().add(tela);
+        
+        tela.show();
+    }//GEN-LAST:event_tbxResultadoMouseClicked
 
     public void preencherTabela(List<Turma> lista){
        
